@@ -1,17 +1,21 @@
 ---
-- name: Install Apache web server
-  hosts: webserver
-  become: true
-
+- name: Install Apache on Ubuntu
+  hosts: all
+  become: yes
+  
   tasks:
-    - name: Install Apache
-      yum:
-        name: httpd
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Apache2
+      apt:
+        name: apache2
         state: present
 
-    - name: Enable Apache
+    - name: Enable Apache2
       service:
-        name: httpd
+        name: apache2
+        enabled: yes
         state: started
-        enabled: true
 
