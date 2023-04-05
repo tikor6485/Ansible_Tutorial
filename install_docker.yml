@@ -1,0 +1,35 @@
+---
+- name: Install Docker # Name of the playbook
+  hosts: all # Target hosts
+  become: true # Run tasks with sudo
+  tasks:
+    - name: Install packages required for Docker # Name of the task
+      apt: # Install packages with APT package manager
+        name:
+          - apt-transport-https # Required to use HTTPS transport
+          - ca-certificates # Required to verify server certificates
+          - curl # Required to transfer data to/from servers
+          - gnupg-agent # Required to securely transfer GPG keys
+          - software-properties-common # Required to manage repositories
+        state: present # Ensure packages are installed
+
+    - name: Add Docker GPG key # Name of the task
+      apt_key: # Add Docker GPG key to APT keyring
+        url: https://download.docker.com/linux/ubuntu/gpg # URL of the key
+        state: present # Ensure key is present
+
+    - name: Add Docker repository # Name of the task
+      apt_repository: # Add Docker repository to APT sources
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable # APT repository line
+        state: present # Ensure repository is present
+
+    - name: Install Docker # Name of the task
+      apt: # Install Docker with APT package manager
+        name: docker-ce # Docker package name
+        state: present # Ensure Docker is installed
+
+    - name: Start Docker service # Name of the task
+      systemd: # Start Docker service with Systemd
+        name: docker # Service name
+        state: started # Ensure service is started
+        enabled: yes # Ensure service is enabled on boot
