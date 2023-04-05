@@ -1,0 +1,29 @@
+---
+# Name of the playbook
+- name: Install Java 11
+
+  # Hosts that this playbook will run on
+  hosts: all
+
+  # Become root user to execute tasks
+  become: true
+
+  # List of tasks to be executed on the hosts
+  tasks:
+
+    # Task 1: Add the OpenJDK PPA repository
+    - name: Add OpenJDK PPA
+      apt_repository:
+        repo: "ppa:openjdk-r/ppa"   # The PPA repository to be added
+        state: present             # Ensure that the repository is present
+      register: ppa_result         # Register the result of this task for use in later tasks
+
+    # Task 2: Install OpenJDK 11
+    - name: Install OpenJDK 11
+      apt:
+        name: "{{ item }}"        # The name of the package to be installed
+        state: present             # Ensure that the package is installed
+      loop:
+        - openjdk-11-jdk           # Install the OpenJDK 11 JDK
+        - openjdk-11-jre-headless  # Install the OpenJDK 11 JRE
+      when: ppa_result.changed == true   # Run this task only if the PPA repository was added
