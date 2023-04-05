@@ -1,18 +1,22 @@
 ---
+# Playbook to install and configure Apache on Ubuntu
 - name: Install Apache on Ubuntu
   hosts: all
-  become: yes
+  become: yes  # run tasks with sudo privileges
   
   tasks:
+    # Update apt cache
     - name: Update apt cache
       apt:
         update_cache: yes
 
+    # Install Apache2
     - name: Install Apache2
       apt:
         name: apache2
         state: present
 
+    # Enable and start Apache2 service
     - name: Enable Apache2
       service:
         name: apache2
