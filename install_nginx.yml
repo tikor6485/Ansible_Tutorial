@@ -1,0 +1,26 @@
+---
+# This playbook will install and configure Nginx on all hosts in the inventory file.
+- name: Install and configure Nginx
+  hosts: all
+
+  tasks:
+    # Install Nginx using the apt module
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    # Copy the Nginx configuration file from the control node to the remote hosts using the copy module
+    - name: Copy Nginx configuration file
+      copy:
+        src: /etc/nginx/nginx.conf # The path refers to the location of the nginx configuration file on the local machine.
+        dest: /home/ubuntu/nginx.conf # path of the nginx.conf file on the remote hosts
+      # Notify the handler to restart Nginx service after the configuration file is copied
+      become: yes
+
+  handlers:
+    # Define a handler to restart Nginx service after the configuration file is copied
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
