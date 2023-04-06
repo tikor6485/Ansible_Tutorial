@@ -1,0 +1,32 @@
+---
+# Ansible playbook to install and configure MySQL on Ubuntu
+
+# Playbook name
+- name: Install and Configure MySQL
+
+  # Target hosts to apply the playbook to
+  hosts: dbserver
+
+  # Switch to root user to run the tasks
+  become: true
+
+  # Define the tasks to be executed on the dbserver hosts
+  tasks:
+
+    # Update apt cache
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    # Install MySQL Server
+    - name: Install MySQL Server
+      apt:
+        name: mysql-server
+        state: present
+
+    # Start MySQL Service
+    - name: Start MySQL Service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
