@@ -1,6 +1,0 @@
-10.0.1.248 ansible_python_interpreter=/usr/bin/python3
-10.0.1.95 ansible_python_interpreter=/usr/bin/python3
-10.0.1.11 ansible_python_interpreter=/usr/bin/python3
-
-[dbserver]
-10.0.1.248
