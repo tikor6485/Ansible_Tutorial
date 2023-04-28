@@ -1,0 +1,59 @@
+---
+- name: Install Kubernetes and Docker on Ubuntu
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+
+  - name: Install dependencies
+    apt:
+      name: ['apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common']
+
+  - name: Add Kubernetes GPG key
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+  - name: Add Kubernetes repository
+    apt_repository:
+      repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+
+  - name: Install Docker
+    apt:
+      name: docker.io
+      state: present
+
+  - name: Add current user to the Docker group
+    user:
+      name: "{{ ansible_user_id }}"
+      groups: docker
+      append: yes
+
+  - name: Install Kubernetes components
+    apt:
+      name: ['kubelet', 'kubeadm', 'kubectl']
+      state: present
+
+  - name: Initialize the Kubernetes cluster
+    command: kubeadm init --pod-network-cidr=10.244.0.0/16
+    args:
+      creates: /etc/kubernetes/admin.conf
+    register: kubeadm_init_output
+
+  - name: Copy kubeconfig file to user directory
+    command: cp /etc/kubernetes/admin.conf {{ ansible_env.HOME }}/.kube/config
+    args:
+      creates: "{{ ansible_env.HOME }}/.kube/config"
+    when: kubeadm_init_output.changed
+
+  - name: Set ownership of kubeconfig file
+    command: chown $(id -u):$(id -g) {{ ansible_env.HOME }}/.kube/config
+    when: kubeadm_init_output.changed
+
+  - name: Install Calico network plugin
+    command: kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+    when: kubeadm_init_output.changed
