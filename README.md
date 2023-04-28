@@ -6,12 +6,17 @@ The playbooks are designed to make it easy for developers and system administrat
 
 The following playbooks are included:
 
+
+- `install_Kubernetes.yml`: Installs and configures Kubernetes and Docker on Ubuntu servers.
 - `install_MySQL.yml`: Installs MySQL server on Ubuntu servers.
 - `install_apache.yml`: Installs and updates Apache web server on Ubuntu servers.
 - `install_docker.yml`: Installs Docker on Ubuntu servers.
 - `install_java11.yml`: Installs OpenJDK 11 on Ubuntu servers.
 - `install_jenkins.yml`: Installs Jenkins on Ubuntu servers.
 - `install_nginx.yml`: Installs and configures Nginx web server on Ubuntu servers.
+
+
+…ation and configuration'
 
 ## Requirements
 
