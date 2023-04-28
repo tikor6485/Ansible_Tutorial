@@ -16,8 +16,6 @@ The following playbooks are included:
 - `install_nginx.yml`: Installs and configures Nginx web server on Ubuntu servers.
 
 
-…ation and configuration'
-
 ## Requirements
 
 - Ansible 2.9 or later installed on your local machine.
